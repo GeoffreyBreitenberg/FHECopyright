@@ -1,0 +1,228 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prettier check
+        run: npm run prettier:check
+        continue-on-error: false
+
+      - name: Run Solhint (Solidity linter)
+        run: npm run lint:sol
+        continue-on-error: false
+
+      - name: Run ESLint (JavaScript linter)
+        run: npm run lint:js
+        continue-on-error: true
+
+  build-and-test:
+    name: Build and Test
+    needs: code-quality
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [18.x, 20.x]
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile smart contracts
+        run: npm run compile
+
+      - name: Run tests
+        run: npm test
+        env:
+          CI: true
+
+      - name: Generate coverage report
+        run: npm run coverage
+        continue-on-error: true
+
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20.x'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for outdated dependencies
+        run: npm outdated
+        continue-on-error: true
+
+  gas-report:
+    name: Gas Usage Report
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile contracts
+        run: npm run compile
+
+      - name: Run tests with gas reporting
+        run: npm run test:gas
+        env:
+          REPORT_GAS: true
+
+      - name: Comment gas report on PR
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            let gasReport = 'Gas report not available';
+            try {
+              if (fs.existsSync('gas-report.txt')) {
+                gasReport = fs.readFileSync('gas-report.txt', 'utf8');
+              }
+            } catch (error) {
+              console.log('Could not read gas report');
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ⛽ Gas Usage Report\n\n\`\`\`\n${gasReport}\n\`\`\``
+            });
+
+  deployment-dry-run:
+    name: Deployment Dry Run
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile contracts
+        run: npm run compile
+
+      - name: Run deployment simulation
+        run: npm run simulate
+        env:
+          CI: true
+
+      - name: Verify deployment artifacts
+        run: |
+          if [ ! -d "artifacts/contracts" ]; then
+            echo "Error: Contract artifacts not found"
+            exit 1
+          fi
+          echo "✅ Deployment artifacts verified"
+
+  status-check:
+    name: All Checks Passed
+    runs-on: ubuntu-latest
+    needs: [code-quality, build-and-test, security-audit]
+    if: always()
+
+    steps:
+      - name: Check status
+        run: |
+          if [ "${{ needs.code-quality.result }}" != "success" ] || \
+             [ "${{ needs.build-and-test.result }}" != "success" ]; then
+            echo "❌ Some checks failed"
+            exit 1
+          fi
+          echo "✅ All required checks passed"
+
+      - name: Success notification
+        if: success()
+        run: |
+          echo "🎉 CI/CD Pipeline completed successfully!"
+          echo "✅ Code quality checks passed"
+          echo "✅ All tests passed"
+          echo "✅ Build successful on all platforms"
