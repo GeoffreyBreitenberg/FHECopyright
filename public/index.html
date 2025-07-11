@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Copyright Protection</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 Anonymous Copyright Protection</h1>
+            <p class="subtitle">Secure your creative works with encrypted blockchain registration</p>
+            <div id="walletInfo" class="wallet-info">
+                <button id="connectBtn" class="btn btn-primary">Connect Wallet</button>
+                <div id="accountInfo" class="account-info" style="display: none;">
+                    <span id="accountAddress"></span>
+                    <button id="disconnectBtn" class="btn btn-secondary">Disconnect</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="register">Register Author</button>
+            <button class="tab-btn" data-tab="submit">Submit Work</button>
+            <button class="tab-btn" data-tab="verify">Verify Work</button>
+            <button class="tab-btn" data-tab="dispute">File Dispute</button>
+            <button class="tab-btn" data-tab="browse">Browse Works</button>
+            <button class="tab-btn" data-tab="profile">My Profile</button>
+        </div>
+
+        <!-- Register Author Tab -->
+        <div id="register" class="tab-content active">
+            <div class="card">
+                <h2>Register as Anonymous Author</h2>
+                <p class="info-text">Register your identity with an encrypted author ID that remains private on the blockchain.</p>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="authorId">Your Secret Author ID (numeric)</label>
+                        <input type="number" id="authorId" placeholder="Enter a unique numeric identifier" required>
+                        <small>This will be encrypted and stored securely on-chain</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register Author</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Submit Work Tab -->
+        <div id="submit" class="tab-content">
+            <div class="card">
+                <h2>Register Original Work</h2>
+                <p class="info-text">Submit your creative work with encrypted content hash for permanent copyright protection.</p>
+                <form id="submitWorkForm">
+                    <div class="form-group">
+                        <label for="workTitle">Work Title</label>
+                        <input type="text" id="workTitle" placeholder="Enter work title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="workCategory">Category</label>
+                        <select id="workCategory" required>
+                            <option value="">Select category</option>
+                            <option value="Literature">Literature</option>
+                            <option value="Music">Music</option>
+                            <option value="Art">Art</option>
+                            <option value="Photography">Photography</option>
+                            <option value="Software">Software</option>
+                            <option value="Design">Design</option>
+                            <option value="Video">Video</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contentHash">Content Hash (numeric)</label>
+                        <input type="number" id="contentHash" placeholder="Enter content fingerprint" required>
+                        <small>Generate a unique numeric hash of your work's content</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register Work</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Verify Work Tab -->
+        <div id="verify" class="tab-content">
+            <div class="card">
+                <h2>Verify Work Ownership</h2>
+                <p class="info-text">Verify if a content hash matches a registered work without revealing the original hash.</p>
+                <form id="verifyForm">
+                    <div class="form-group">
+                        <label for="verifyWorkId">Work ID</label>
+                        <input type="number" id="verifyWorkId" placeholder="Enter work ID to verify" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="verifyHash">Content Hash to Verify</label>
+                        <input type="number" id="verifyHash" placeholder="Enter content hash" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Request Verification</button>
+                </form>
+                <div id="verifyResult" class="result-box" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Dispute Tab -->
+        <div id="dispute" class="tab-content">
+            <div class="card">
+                <h2>File Copyright Dispute</h2>
+                <p class="info-text">Challenge the ownership of a work if you believe you have prior rights.</p>
+                <form id="disputeForm">
+                    <div class="form-group">
+                        <label for="disputeWorkId">Work ID to Dispute</label>
+                        <input type="number" id="disputeWorkId" placeholder="Enter work ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="disputeHash">Your Content Hash (evidence)</label>
+                        <input type="number" id="disputeHash" placeholder="Enter your content hash" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">File Dispute</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Resolve Dispute</h2>
+                <form id="resolveForm">
+                    <div class="form-group">
+                        <label for="resolveWorkId">Work ID</label>
+                        <input type="number" id="resolveWorkId" placeholder="Enter work ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resolveDisputeId">Dispute ID</label>
+                        <input type="number" id="resolveDisputeId" placeholder="Enter dispute ID" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Resolve Dispute</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Browse Works Tab -->
+        <div id="browse" class="tab-content">
+            <div class="card">
+                <h2>Browse Registered Works</h2>
+                <div class="form-group">
+                    <label for="browseWorkId">Work ID</label>
+                    <input type="number" id="browseWorkId" placeholder="Enter work ID">
+                    <button id="loadWorkBtn" class="btn btn-secondary">Load Work</button>
+                </div>
+                <div id="workDetails" class="work-details"></div>
+            </div>
+
+            <div class="card">
+                <h2>Platform Statistics</h2>
+                <div id="stats" class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalWorks">0</div>
+                        <div class="stat-label">Total Works Registered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tab-content">
+            <div class="card">
+                <h2>Author Profile</h2>
+                <div id="authorStats" class="stats-grid"></div>
+            </div>
+
+            <div class="card">
+                <h2>My Registered Works</h2>
+                <div id="myWorks" class="works-list"></div>
+            </div>
+        </div>
+
+        <!-- Transaction Status -->
+        <div id="txStatus" class="tx-status" style="display: none;">
+            <div class="tx-content">
+                <div class="spinner"></div>
+                <span id="txMessage">Processing transaction...</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Powered by fhEVM - Fully Homomorphic Encryption for Blockchain Privacy</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
