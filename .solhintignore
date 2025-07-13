@@ -1,0 +1,10 @@
+# Directories
+node_modules/
+artifacts/
+cache/
+coverage/
+deployments/
+
+# Files
+*.min.sol
+*.generated.sol
