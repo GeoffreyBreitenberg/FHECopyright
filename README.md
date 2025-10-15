@@ -113,7 +113,7 @@ Try the platform directly:
 
 **Video File**: `demo.mp4` (located in project root)
 
-**Download to Watch**: The video file needs to be downloaded to your local machine as direct streaming links are not available.
+**Download to Watch**: The video file needs to be downloaded to your local machine as streaming links are not available.
 
 **What the Demo Shows**:
 - Complete user registration flow
@@ -472,7 +472,7 @@ We welcome contributions from the community! This project demonstrates the power
 ### Get Help
 - **GitHub Issues**: [Report bugs or request features](https://github.com/GeoffreyBreitenberg/FHECopyright/issues)
 - **GitHub Discussions**: Share ideas and use cases
-- **Documentation**: Comprehensive guides in `/docs`
+- **Documentation**: Comprehensive guides in project repository
 
 ### Community
 Join our community to discuss FHE technology and copyright protection innovations.
