@@ -1,4 +1,4 @@
-# 🔐 Anonymous Copyright Protection
+# 🔐 Anonymous Copyright Protection - Monorepo
 
 A privacy-preserving blockchain platform for creative work authentication using Fully Homomorphic Encryption (FHE) on Ethereum Sepolia testnet.
 
@@ -6,11 +6,215 @@ A privacy-preserving blockchain platform for creative work authentication using 
 
 ## 🌟 Overview
 
-Anonymous Copyright Protection leverages **fhEVM** (Fully Homomorphic Encryption for Ethereum Virtual Machine) to enable creators to register and protect their original works without revealing sensitive information on-chain. All content hashes and author identities remain encrypted while still being verifiable and disputable.
+This monorepo contains multiple implementations of Anonymous Copyright Protection leveraging **fhEVM** (Fully Homomorphic Encryption for Ethereum Virtual Machine) to enable creators to register and protect their original works without revealing sensitive information on-chain. All content hashes and author identities remain encrypted while still being verifiable and disputable.
+
+### 📦 Project Structure
+
+This repository contains two distinct implementations:
+
+```
+D:\
+├── anonymous-copyright/          # Standalone React + FHEVM implementation
+│   ├── contracts/               # Solidity smart contracts with FHE
+│   ├── frontend/                # React 18 + Vite frontend
+│   │   ├── src/
+│   │   │   ├── components/     # 7 modular React components
+│   │   │   └── utils/          # FHE SDK integration
+│   │   └── package.json        # React, Vite, ethers, @fhevm/sdk
+│   ├── scripts/                # Deployment & interaction scripts
+│   ├── test/                   # 56+ comprehensive tests
+│   └── package.json            # Hardhat + FHE dependencies
+│
+└── fhevm-react-template/         # Universal FHEVM SDK Framework
+    ├── packages/
+    │   └── fhevm-sdk/          # Core SDK package (framework-agnostic)
+    ├── templates/              # Starter templates
+    └── examples/
+        ├── anonymous-copyright/ # Full dApp with SDK integration
+        └── nextjs-showcase/    # Next.js 14 integration example
+```
+
+---
+
+## 🚀 Two Implementations
+
+### 1️⃣ `anonymous-copyright/` - Standalone React Application
+
+**Purpose**: Production-ready standalone dApp with complete React frontend
+
+**Tech Stack**:
+- ⚛️ **React 18.2.0** - Modern component-based UI
+- 🚀 **Vite 5.0.8** - Lightning-fast dev server & optimized builds
+- 🔐 **@fhevm/sdk** - FHE encryption integration (local package reference)
+- 🌐 **ethers.js v6.9.0** - Web3 wallet & contract interaction
+- 🎨 **react-hot-toast** - User notifications
+- 💼 **Hardhat 2.19.0** - Smart contract development
+- ✅ **56+ Tests** - Comprehensive test coverage
+
+**Features**:
+- Complete React 18 application with 7 modular components
+- Vite build system for fast development
+- Full FHEVM SDK integration for encryption
+- MetaMask wallet connectivity
+- Real-time toast notifications
+- Responsive modern UI design
+- Production deployment ready
+
+**Quick Start**:
+```bash
+cd anonymous-copyright
+
+# Contract development
+npm install
+npm run compile
+npm test
+npm run deploy
+
+# Frontend development
+cd frontend
+npm install
+npm run dev        # Start at http://localhost:3000
+npm run build      # Production build
+```
+
+### 2️⃣ `fhevm-react-template/` - Universal SDK Framework
+
+**Purpose**: Framework-agnostic SDK with multiple examples and templates
+
+**Tech Stack**:
+- 📦 **Core SDK Package** - Universal FHEVM SDK (works with any framework)
+- ⚛️ **React 18 Examples** - Complete React integration examples
+- ▲ **Next.js 14 Examples** - App Router with server components
+- 🔧 **Monorepo Structure** - Organized packages and examples
+- 📚 **Comprehensive Docs** - API reference, guides, examples
+
+**Features**:
+- Framework-agnostic core SDK
+- Multiple implementation examples (React, Next.js)
+- Starter templates for quick bootstrap
+- Wagmi-like API design
+- TypeScript support
+- Reusable patterns and components
+
+**Quick Start**:
+```bash
+cd fhevm-react-template
+
+# SDK development
+cd packages/fhevm-sdk
+npm install
+npm run build
+
+# Try examples
+cd examples/anonymous-copyright
+npm install && cd frontend && npm install && npm run dev
+
+cd examples/nextjs-showcase
+npm install && npm run dev
+```
+
+---
+
+## 🎯 Which Implementation Should I Use?
+
+### Use `anonymous-copyright/` if you need:
+✅ A **standalone production-ready dApp**
+✅ **Simple deployment** - Single project structure
+✅ **React 18 + Vite** - Modern, fast development
+✅ **Quick start** - Ready to run immediately
+✅ **Self-contained** - All dependencies in one place
+✅ **Deployment focus** - Optimized for Vercel/production
+
+**Best for**: Building your own copyright protection dApp, deploying to production quickly, learning React + FHE integration
+
+### Use `fhevm-react-template/` if you need:
+✅ A **reusable SDK framework**
+✅ **Multiple framework support** - React, Next.js, Vue, etc.
+✅ **Template library** - Bootstrap new projects quickly
+✅ **Learning resource** - Multiple examples and patterns
+✅ **SDK development** - Contribute to the core package
+✅ **Complex applications** - Server-side rendering, API routes
+
+**Best for**: Building multiple FHE dApps, creating your own SDK-based products, exploring different frameworks, contributing to open-source
+
+### Feature Comparison
+
+| Feature | `anonymous-copyright/` | `fhevm-react-template/` |
+|---------|----------------------|------------------------|
+| **Project Type** | Standalone dApp | SDK Framework + Examples |
+| **Structure** | Single project | Monorepo with packages |
+| **Frontend** | React 18 + Vite | React, Next.js examples |
+| **Setup Complexity** | Simple | Moderate |
+| **Use Case** | Deploy one dApp | Build multiple dApps |
+| **SDK Dependency** | Local package ref | Core package included |
+| **Documentation** | Application-focused | SDK + API focused |
+| **Learning Curve** | Easy | Moderate |
+| **Customization** | Direct editing | Extend SDK |
+| **Best For** | Production deployment | SDK development |
+| **Components** | 7 React components | Multiple implementations |
+| **TypeScript** | Optional types | Full TS support |
+| **Templates** | None | Multiple templates |
+| **Examples** | Self-contained | Multiple examples |
 
 ---
 
 ## 🎯 Core Concept: FHE Contract for Anonymous Creative Copyright Protection
+
+## 🚀 Getting Started (Quick Guide)
+
+### Prerequisites
+- Node.js 18+ installed
+- MetaMask wallet extension
+- Sepolia testnet ETH (from faucet)
+- Git for cloning
+
+### Option 1: Run Standalone React App
+
+```bash
+# Clone and navigate
+cd D:\anonymous-copyright
+
+# Install and compile contracts
+npm install
+npm run compile
+npm test                    # Run 56+ tests
+
+# Deploy to Sepolia (optional)
+npm run deploy
+
+# Start React frontend
+cd frontend
+npm install
+npm run dev                 # Opens http://localhost:3000
+
+# Connect MetaMask to Sepolia and start using!
+```
+
+### Option 2: Explore SDK Framework
+
+```bash
+# Navigate to framework
+cd D:\fhevm-react-template
+
+# Try React example
+cd examples/anonymous-copyright
+npm install
+cd frontend && npm install && npm run dev
+
+# Or try Next.js example
+cd examples/nextjs-showcase
+npm install
+npm run dev
+```
+
+### First-Time User Flow
+1. **Connect Wallet** - Click "Connect Wallet" and approve MetaMask
+2. **Register as Author** - Enter a unique numeric author ID (encrypted with FHE)
+3. **Submit Work** - Add title, category, and content hash (encrypted)
+4. **Verify Ownership** - Prove ownership without revealing content
+5. **Browse Works** - View all registered works on-chain
+
+---
 
 ### Privacy-Preserving Original Work Authentication
 
@@ -343,48 +547,118 @@ Developers prove code ownership without exposing source code or implementation d
 ## 🌐 Links & Resources
 
 ### Project Links
-- 🔗 **GitHub Repository**: [https://github.com/GeoffreyBreitenberg/FHECopyright](https://github.com/GeoffreyBreitenberg/FHECopyright)
+
+#### `anonymous-copyright/` Implementation
 - 🌐 **Live Application**: [https://fhe-copyright.vercel.app/](https://fhe-copyright.vercel.app/)
-- 📜 **Smart Contract**: [View on Sepolia Etherscan](https://sepolia.etherscan.io/address/0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a)
+- 📜 **Smart Contract**: [0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a](https://sepolia.etherscan.io/address/0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a)
+- 📹 **Video Demo**: `anonymous-copyright/AnonymousCopyright.mp4`
+- 📖 **Documentation**: See `anonymous-copyright/README.md`
+
+#### `fhevm-react-template/` Framework
+- 🔗 **GitHub Repository**: [https://github.com/GeoffreyBreitenberg/fhevm-react-template](https://github.com/GeoffreyBreitenberg/fhevm-react-template)
+- 🌐 **Live Demo**: [https://fhe-copyright.vercel.app/](https://fhe-copyright.vercel.app/) (using template example)
+- 📖 **SDK Documentation**: See `fhevm-react-template/README.md`
+- 📚 **API Reference**: `fhevm-react-template/docs/API.md`
+- 📝 **Quick Start**: `fhevm-react-template/docs/QUICKSTART.md`
 
 ### External Resources
 - 📚 **fhEVM Documentation**: [https://docs.zama.ai/fhevm](https://docs.zama.ai/fhevm)
 - 🔐 **Zama Technology**: [https://www.zama.ai/](https://www.zama.ai/)
 - 🦊 **MetaMask Wallet**: [https://metamask.io/](https://metamask.io/)
 - 💧 **Sepolia Faucet**: [https://sepoliafaucet.com/](https://sepoliafaucet.com/)
+- ⚛️ **React Documentation**: [https://react.dev/](https://react.dev/)
+- ⚡ **Vite Documentation**: [https://vitejs.dev/](https://vitejs.dev/)
+- ▲ **Next.js Documentation**: [https://nextjs.org/docs](https://nextjs.org/docs)
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Blockchain Layer
+### Shared Technologies (Both Implementations)
+
+#### Blockchain Layer
 - **Network**: Ethereum Sepolia Testnet
 - **Smart Contract**: Solidity 0.8.24
 - **FHE Library**: @fhevm/solidity by Zama
 - **EVM Version**: Cancun
-- **Development**: Hardhat 2.19.0
-- **Testing**: Mocha + Chai (56 tests)
+- **Development Framework**: Hardhat 2.19.0
+- **Testing Framework**: Mocha + Chai
+- **Test Coverage**: 56+ comprehensive test cases (~90% coverage)
 
-### Frontend Layer
-- **Framework**: React 18.2 with Vite
-- **Web3**: ethers.js v6.9.0
-- **Styling**: Custom CSS with modern design
-- **Hosting**: Vercel
-- **UI Components**: React Hot Toast for notifications
-
-### Encryption & Privacy
+#### Encryption & Privacy
 - **FHE Provider**: Zama fhEVM
 - **Encrypted Types**: euint32, euint64, ebool
-- **Operations**: Equality, comparison on encrypted data
-- **Decryption**: Asynchronous gateway-based
+- **FHE Operations**:
+  - Equality comparison on encrypted data
+  - Encrypted storage and verification
+  - Asynchronous gateway-based decryption
+- **Privacy Guarantees**: Zero-knowledge proof capabilities
 
-### Development Tools
-- **Build**: Hardhat, Vite
-- **Testing**: 56 comprehensive test cases
-- **Linting**: Solhint, ESLint
-- **Formatting**: Prettier
-- **CI/CD**: GitHub Actions
-- **Security**: Husky pre-commit hooks
+### Implementation-Specific Technologies
+
+#### 1️⃣ `anonymous-copyright/` Tech Stack
+
+**Frontend**:
+- ⚛️ **React 18.2.0** - Component-based UI with hooks (useState, useEffect)
+- 🚀 **Vite 5.0.8** - Fast HMR, optimized production builds
+- 🔐 **@fhevm/sdk** - Local package reference for FHE operations
+- 🌐 **ethers.js v6.9.0** - BrowserProvider, Contract interaction
+- 🎨 **react-hot-toast 2.4.1** - Real-time notifications
+- 💅 **Custom CSS** - Gradient themes, responsive design
+- 🧩 **Component Architecture**: 7 modular React components
+  - `App.jsx` - Main application & wallet management
+  - `Header.jsx` - Navigation & account display
+  - `ConnectWallet.jsx` - MetaMask integration
+  - `AuthorRegistration.jsx` - FHE author registration
+  - `WorkRegistration.jsx` - Content submission with encryption
+  - `WorkVerification.jsx` - Ownership verification
+  - `DisputeManagement.jsx` - Dispute filing & resolution
+  - `WorksList.jsx` - Portfolio display
+
+**Development Tools**:
+- ESLint 8.55.0 - Code linting
+- Prettier 3.1.1 - Code formatting
+- Vitest 1.1.0 - Unit testing
+- @vitejs/plugin-react 4.2.1 - React Fast Refresh
+
+**Deployment**:
+- Vercel - Production hosting
+- Environment variables via Vite (VITE_CONTRACT_ADDRESS, VITE_NETWORK)
+
+#### 2️⃣ `fhevm-react-template/` Tech Stack
+
+**Core SDK**:
+- 📦 **Framework-agnostic SDK** - Works with any JS framework
+- 🔧 **Modular architecture** - Composable utilities
+- 📘 **TypeScript ready** - Full type definitions
+- 🎣 **React hooks** - useFhevmClient, useEncrypt, etc.
+- 🔄 **Wagmi-like API** - Familiar developer experience
+
+**Examples**:
+- **React Example**: Same stack as `anonymous-copyright/`
+- **Next.js Example**:
+  - Next.js 14 with App Router
+  - Server & Client Components
+  - API routes for FHE operations
+  - Server-side encryption support
+
+**Documentation**:
+- Complete API reference
+- Quick start guides
+- Usage examples
+- Best practices
+
+### Shared Development Tools
+- **Version Control**: Git with Husky pre-commit hooks
+- **CI/CD**: GitHub Actions workflows
+- **Security**:
+  - Solhint for Solidity linting
+  - npm audit for dependency scanning
+  - Manual security reviews
+- **Code Quality**:
+  - ESLint for JavaScript/TypeScript
+  - Prettier for consistent formatting
+  - Pre-commit hooks for automated checks
 
 ---
 
@@ -424,18 +698,36 @@ Track real-time blockchain metrics:
 
 ---
 
-## 🎯 Future Roadmap
+## 🎯 Roadmap
 
-- ✅ **Phase 1**: Core FHE copyright registration (Complete)
-- ✅ **Phase 2**: Encrypted verification system (Complete)
-- ✅ **Phase 3**: Dispute mechanism (Complete)
-- ✅ **Phase 4**: React frontend with Web3 (Complete)
-- 🔄 **Phase 5**: IPFS integration for decentralized storage
-- 🔄 **Phase 6**: Multi-chain deployment (Polygon, Arbitrum)
-- 🔄 **Phase 7**: NFT minting for verified works
-- 🔄 **Phase 8**: DAO governance for dispute resolution
-- 🔄 **Phase 9**: Mobile application (iOS/Android)
-- 🔄 **Phase 10**: Advanced FHE operations (comparison, ranking)
+### Completed ✅
+- ✅ **Core FHE Contract** - Smart contract with euint32/euint64 encryption
+- ✅ **Verification System** - Encrypted ownership verification
+- ✅ **Dispute Mechanism** - On-chain dispute resolution
+- ✅ **React 18 Frontend** - Standalone dApp with Vite (`anonymous-copyright/`)
+- ✅ **Universal SDK** - Framework-agnostic FHEVM SDK (`fhevm-react-template/`)
+- ✅ **Multiple Examples** - React and Next.js implementations
+- ✅ **56+ Tests** - Comprehensive test coverage
+- ✅ **Production Deployment** - Live on Vercel
+- ✅ **CI/CD Pipeline** - GitHub Actions automation
+- ✅ **Documentation** - Complete guides and API reference
+
+### In Progress 🔄
+- 🔄 **Vue.js Example** - Add Vue 3 integration example
+- 🔄 **Enhanced Testing** - Frontend component tests with Vitest
+- 🔄 **Performance Optimization** - Gas optimization for FHE operations
+
+### Planned 📋
+- 📋 **IPFS Integration** - Decentralized content storage
+- 📋 **Multi-chain Support** - Deploy to Polygon, Arbitrum, Base
+- 📋 **NFT Minting** - Mint NFTs for verified works
+- 📋 **DAO Governance** - Community-driven dispute resolution
+- 📋 **Mobile App** - React Native iOS/Android application
+- 📋 **Advanced FHE** - Comparison, ranking, and aggregation operations
+- 📋 **Batch Operations** - Register/verify multiple works at once
+- 📋 **API Gateway** - REST API for backend integration
+- 📋 **Analytics Dashboard** - On-chain metrics and insights
+- 📋 **Premium Features** - Licensing, royalties, and monetization
 
 ---
 
@@ -449,21 +741,54 @@ See [LICENSE](./LICENSE) file for full details.
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! This project demonstrates the power of Fully Homomorphic Encryption in protecting intellectual property rights while maintaining blockchain transparency.
+We welcome contributions from the community! This monorepo demonstrates the power of Fully Homomorphic Encryption in protecting intellectual property rights while maintaining blockchain transparency.
 
-**How to Contribute**:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-5. Follow our code style guidelines
+### How to Contribute
 
-**Areas for Contribution**:
-- FHE optimization
-- UI/UX improvements
-- Additional test cases
-- Documentation enhancements
-- Security audits
+#### To `anonymous-copyright/` (Standalone dApp)
+1. Navigate to `anonymous-copyright/` directory
+2. Fork and create feature branch
+3. Test your changes: `npm test` (contracts) and `npm run dev` (frontend)
+4. Submit pull request with clear description
+5. Ensure all tests pass and code is formatted
+
+**Contribution Areas**:
+- 🎨 UI/UX improvements for React components
+- ⚡ Vite optimization and build improvements
+- 🧪 Additional frontend tests with Vitest
+- 📱 Mobile responsiveness enhancements
+- 🐛 Bug fixes and error handling
+
+#### To `fhevm-react-template/` (SDK Framework)
+1. Navigate to `fhevm-react-template/` directory
+2. Fork and create feature branch
+3. Build SDK: `cd packages/fhevm-sdk && npm run build`
+4. Test examples: `cd examples/[example-name] && npm test`
+5. Update documentation in `/docs`
+6. Submit pull request
+
+**Contribution Areas**:
+- 📦 SDK core improvements
+- 🎣 New React hooks for FHE operations
+- 📝 Additional framework examples (Vue, Svelte, Angular)
+- 📚 Documentation and tutorials
+- 🔧 TypeScript type definitions
+- 🎓 Educational content and guides
+
+### Development Guidelines
+- **Code Style**: Use ESLint and Prettier (auto-formatted on commit)
+- **Testing**: Add tests for new features
+- **Documentation**: Update relevant README and docs
+- **Commits**: Use conventional commit messages
+- **Security**: Run `npm audit` before submitting
+
+### Areas for Contribution (Both Projects)
+- 🔐 FHE optimization and gas reduction
+- 🛡️ Security audits and vulnerability reports
+- 📊 Performance benchmarking
+- 🌐 Internationalization (i18n)
+- ♿ Accessibility (a11y) improvements
+- 📖 Tutorial videos and blog posts
 
 ---
 
@@ -490,6 +815,74 @@ Join our community to discuss FHE technology and copyright protection innovation
 
 ---
 
+## 📂 Project Navigation
+
+### Quick Access to Subdirectories
+
+#### 📁 `anonymous-copyright/` - Standalone React dApp
+```bash
+cd D:\anonymous-copyright
+```
+- **README**: `./anonymous-copyright/README.md`
+- **Contracts**: `./anonymous-copyright/contracts/`
+- **Frontend**: `./anonymous-copyright/frontend/`
+- **Tests**: `./anonymous-copyright/test/`
+- **Scripts**: `./anonymous-copyright/scripts/`
+
+#### 📁 `fhevm-react-template/` - Universal SDK Framework
+```bash
+cd D:\fhevm-react-template
+```
+- **README**: `./fhevm-react-template/README.md`
+- **Core SDK**: `./fhevm-react-template/packages/fhevm-sdk/`
+- **Examples**: `./fhevm-react-template/examples/`
+- **Templates**: `./fhevm-react-template/templates/`
+- **Documentation**: `./fhevm-react-template/docs/`
+
+### Quick Commands Summary
+
+```bash
+# Standalone React App
+cd anonymous-copyright
+npm install && npm test && cd frontend && npm install && npm run dev
+
+# SDK Framework - React Example
+cd fhevm-react-template/examples/anonymous-copyright
+npm install && cd frontend && npm install && npm run dev
+
+# SDK Framework - Next.js Example
+cd fhevm-react-template/examples/nextjs-showcase
+npm install && npm run dev
+```
+
+---
+
 **Protecting Creativity. Preserving Privacy. Proving Ownership.**
 
 *Anonymous Copyright Protection - Where blockchain transparency meets data privacy through FHE.*
+
+---
+
+## 🎉 Summary
+
+This monorepo provides **two powerful ways** to build FHE-powered copyright protection dApps:
+
+1. **`anonymous-copyright/`** - Ready-to-deploy React 18 + Vite application
+   - Perfect for: Quick deployment, production use, learning React + FHE
+   - Stack: React 18.2, Vite 5.0.8, ethers v6, @fhevm/sdk
+
+2. **`fhevm-react-template/`** - Framework-agnostic SDK with examples
+   - Perfect for: SDK development, multiple frameworks, reusable components
+   - Stack: Core SDK + React/Next.js examples, TypeScript support
+
+**Both implementations**:
+- ✅ Use the same FHE smart contract (Solidity 0.8.24)
+- ✅ Support encrypted author IDs and content hashes
+- ✅ Include comprehensive test suites (56+ tests)
+- ✅ Feature production-ready code with CI/CD
+- ✅ Deploy to Ethereum Sepolia testnet
+- ✅ Provide complete documentation
+
+**Choose based on your needs**: Standalone app for quick deployment, SDK framework for building multiple dApps or contributing to the ecosystem.
+
+**Get started in minutes!** 🚀
