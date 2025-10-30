@@ -1,0 +1,32 @@
+{
+  "name": "anonymous-copyright-protection",
+  "version": "1.0.0",
+  "description": "Anonymous creation copyright protection with FHE on Sepolia",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js --network sepolia",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "test": "hardhat test",
+    "node": "hardhat node"
+  },
+  "keywords": [
+    "fhe",
+    "copyright",
+    "privacy",
+    "blockchain",
+    "anonymous",
+    "zama"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "@fhevm/solidity": "^0.1.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.9.0"
+  }
+}
