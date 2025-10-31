@@ -8,12 +8,6 @@ A privacy-preserving blockchain platform for creative work authentication using 
 
 This monorepo contains multiple implementations of Anonymous Copyright Protection leveraging **fhEVM** (Fully Homomorphic Encryption for Ethereum Virtual Machine) to enable creators to register and protect their original works without revealing sensitive information on-chain. All content hashes and author identities remain encrypted while still being verifiable and disputable.
 
-
-**View on Block Explorer**:
-- [Sepolia Etherscan](https://sepolia.etherscan.io/address/0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a)
-
----
-
 ## 🎬 Live Demonstration
 
 ### 🌐 Web Application
