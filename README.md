@@ -8,6 +8,51 @@ A privacy-preserving blockchain platform for creative work authentication using 
 
 This monorepo contains multiple implementations of Anonymous Copyright Protection leveraging **fhEVM** (Fully Homomorphic Encryption for Ethereum Virtual Machine) to enable creators to register and protect their original works without revealing sensitive information on-chain. All content hashes and author identities remain encrypted while still being verifiable and disputable.
 
+
+**View on Block Explorer**:
+- [Sepolia Etherscan](https://sepolia.etherscan.io/address/0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a)
+
+---
+
+## 🎬 Live Demonstration
+
+### 🌐 Web Application
+**Live Site**: [https://fhe-copyright.vercel.app/](https://fhe-copyright.vercel.app/)
+
+Try the platform directly:
+1. Connect your MetaMask wallet to Sepolia
+2. Register as an anonymous author
+3. Submit your creative works with encrypted hashes
+4. Verify ownership without revealing content
+5. View all registered works on-chain
+
+### 📹 Video Demonstration
+
+**Video File**: `demo.mp4` (located in project root)
+
+**Download to Watch**: The video file needs to be downloaded to your local machine as streaming links are not available.
+
+**What the Demo Shows**:
+- Complete user registration flow
+- Work submission with FHE encryption
+- Privacy-preserving verification process
+- Dispute filing mechanism
+- Real-time blockchain interaction
+- MetaMask wallet integration
+- Encrypted data handling
+
+**How to Access**:
+1. Download `demo.mp4` from the repository
+2. Play locally with your preferred video player
+3. See the full platform workflow in action
+
+### 🔍 On-Chain Verification
+All transactions are publicly verifiable on Sepolia:
+- **Block Explorer**: [https://sepolia.etherscan.io/](https://sepolia.etherscan.io/)
+- **Search Contract**: `0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a`
+- **View Events**: AuthorRegistered, WorkRegistered, DisputeFiled, WorkVerified
+
+
 ### 📦 Project Structure
 
 This repository contains two distinct implementations:
@@ -296,48 +341,6 @@ Traditional copyright registration systems expose creator identities and work de
 - Fully Homomorphic Encryption (euint32, euint64)
 - Ethereum Sepolia Network
 
-**View on Block Explorer**:
-- [Sepolia Etherscan](https://sepolia.etherscan.io/address/0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a)
-
----
-
-## 🎬 Live Demonstration
-
-### 🌐 Web Application
-**Live Site**: [https://fhe-copyright.vercel.app/](https://fhe-copyright.vercel.app/)
-
-Try the platform directly:
-1. Connect your MetaMask wallet to Sepolia
-2. Register as an anonymous author
-3. Submit your creative works with encrypted hashes
-4. Verify ownership without revealing content
-5. View all registered works on-chain
-
-### 📹 Video Demonstration
-
-**Video File**: `demo.mp4` (located in project root)
-
-**Download to Watch**: The video file needs to be downloaded to your local machine as streaming links are not available.
-
-**What the Demo Shows**:
-- Complete user registration flow
-- Work submission with FHE encryption
-- Privacy-preserving verification process
-- Dispute filing mechanism
-- Real-time blockchain interaction
-- MetaMask wallet integration
-- Encrypted data handling
-
-**How to Access**:
-1. Download `demo.mp4` from the repository
-2. Play locally with your preferred video player
-3. See the full platform workflow in action
-
-### 🔍 On-Chain Verification
-All transactions are publicly verifiable on Sepolia:
-- **Block Explorer**: [https://sepolia.etherscan.io/](https://sepolia.etherscan.io/)
-- **Search Contract**: `0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a`
-- **View Events**: AuthorRegistered, WorkRegistered, DisputeFiled, WorkVerified
 
 ---
 
