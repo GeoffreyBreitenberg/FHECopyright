@@ -1,0 +1,61 @@
+{
+  "name": "fhevm-react-template",
+  "version": "1.0.0",
+  "description": "Universal FHEVM SDK - Framework-agnostic toolkit for building confidential dApps with Fully Homomorphic Encryption",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier --write '**/*.{js,ts,tsx,json,md,sol}'",
+    "format:check": "prettier --check '**/*.{js,ts,tsx,json,md,sol}'",
+    "prepare": "husky install 2>/dev/null || true",
+    "example:copyright": "npm run --prefix examples/anonymous-copyright",
+    "example:copyright:test": "npm run test --prefix examples/anonymous-copyright",
+    "example:copyright:deploy": "npm run deploy --prefix examples/anonymous-copyright",
+    "docs:build": "echo 'Documentation ready in docs/'",
+    "docs:serve": "echo 'Serve documentation (implement with your preferred tool)'",
+    "postinstall": "echo '✅ Universal FHEVM SDK installed successfully!'"
+  },
+  "keywords": [
+    "fhe",
+    "fhevm",
+    "encryption",
+    "privacy",
+    "blockchain",
+    "ethereum",
+    "zama",
+    "homomorphic-encryption",
+    "confidential-computing",
+    "react",
+    "nextjs",
+    "sdk",
+    "framework-agnostic",
+    "web3",
+    "smart-contracts"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "prettier": "^3.1.1",
+    "prettier-plugin-solidity": "^1.2.0"
+  }
+}
