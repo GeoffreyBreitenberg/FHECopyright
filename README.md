@@ -42,7 +42,7 @@ Try the platform directly:
 
 ### 🔍 On-Chain Verification
 All transactions are publicly verifiable on Sepolia:
-- **Block Explorer**: [https://sepolia.etherscan.io/](https://sepolia.etherscan.io/)
+- **Block Explorer**: [https://sepolia.etherscan.io/](https://sepolia.etherscan.io/0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a)
 - **Search Contract**: `0xe2851b2B971E3F95f325764c25ffd52E9c8bf80a`
 - **View Events**: AuthorRegistered, WorkRegistered, DisputeFiled, WorkVerified
 
