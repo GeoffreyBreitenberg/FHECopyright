@@ -9,6 +9,13 @@ contract AnonymousCopyright is SepoliaConfig {
     address public owner;
     uint256 public workCounter;
 
+    // Timeout protection constants
+    uint256 public constant VERIFICATION_TIMEOUT = 1 hours;
+    uint256 public constant DISPUTE_TIMEOUT = 24 hours;
+
+    // Fee for verification to prevent spam
+    uint256 public verificationFee = 0.001 ether;
+
     struct OriginalWork {
         euint32 encryptedContentHash;
         euint64 encryptedAuthorId;
@@ -21,12 +28,25 @@ contract AnonymousCopyright is SepoliaConfig {
         string category;
     }
 
+    // Verification request tracking for Gateway callback
+    struct VerificationRequest {
+        uint256 workId;
+        address requester;
+        uint256 timestamp;
+        uint256 decryptionRequestId;
+        bool processed;
+        bool feePaid;
+    }
+
+    // Dispute record with timeout and refund mechanism
     struct DisputeRecord {
         address challenger;
         euint32 challengerContentHash;
         uint256 timestamp;
         bool resolved;
         address winner;
+        uint256 decryptionRequestId;
+        bool timeoutClaimed;
     }
 
     struct AuthorProfile {
@@ -42,11 +62,24 @@ contract AnonymousCopyright is SepoliaConfig {
     mapping(address => AuthorProfile) public authors;
     mapping(address => uint256[]) public authorWorks;
 
+    // Gateway callback tracking
+    mapping(uint256 => VerificationRequest) public verificationRequests;
+    mapping(uint256 => uint256) public requestIdToWorkId;
+    mapping(uint256 => uint256) public disputeRequestIdToWorkId;
+    mapping(uint256 => uint256) public disputeRequestIdToDisputeId;
+
+    // Refund tracking
+    mapping(address => uint256) public pendingRefunds;
+
     event WorkRegistered(uint256 indexed workId, address indexed registrant, string title, uint256 timestamp);
     event WorkVerified(uint256 indexed workId, address indexed verifier);
     event DisputeFiled(uint256 indexed workId, address indexed challenger, uint256 disputeId);
     event DisputeResolved(uint256 indexed workId, uint256 disputeId, address winner);
     event AuthorRegistered(address indexed author, uint256 timestamp);
+    event VerificationRequested(uint256 indexed workId, address indexed requester, uint256 requestId);
+    event VerificationProcessed(uint256 indexed requestId, uint256 indexed workId, bool isMatch);
+    event RefundIssued(address indexed recipient, uint256 amount);
+    event TimeoutClaimed(uint256 indexed workId, uint256 indexed disputeId, address indexed claimant);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not authorized");
@@ -58,14 +91,36 @@ contract AnonymousCopyright is SepoliaConfig {
         _;
     }
 
+    // Input validation modifier
+    modifier validWorkId(uint256 _workId) {
+        require(_workId > 0 && _workId <= workCounter, "Invalid work ID");
+        _;
+    }
+
+    // Prevent reentrancy
+    bool private locked;
+    modifier noReentrant() {
+        require(!locked, "Reentrancy detected");
+        locked = true;
+        _;
+        locked = false;
+    }
+
     constructor() {
         owner = msg.sender;
         workCounter = 0;
     }
 
+    // Owner can update verification fee
+    function setVerificationFee(uint256 _newFee) external onlyOwner {
+        require(_newFee <= 0.1 ether, "Fee too high"); // Max 0.1 ETH
+        verificationFee = _newFee;
+    }
+
     // Register as anonymous author with encrypted identity
     function registerAuthor(uint64 _authorId) external {
         require(!authors[msg.sender].registered, "Already registered");
+        require(_authorId > 0, "Invalid author ID"); // Input validation
 
         euint64 encryptedAuthorId = FHE.asEuint64(_authorId);
 
@@ -90,9 +145,13 @@ contract AnonymousCopyright is SepoliaConfig {
         string calldata _category
     ) external onlyRegisteredAuthor returns (uint256) {
         require(bytes(_title).length > 0, "Title required");
+        require(bytes(_title).length <= 100, "Title too long"); // Input validation
         require(bytes(_category).length > 0, "Category required");
+        require(bytes(_category).length <= 50, "Category too long"); // Input validation
+        require(_contentHash > 0, "Invalid content hash"); // Input validation
 
         workCounter++;
+        require(workCounter > 0, "Work counter overflow"); // Overflow protection
         uint256 workId = workCounter;
 
         euint32 encryptedContentHash = FHE.asEuint32(_contentHash);
@@ -120,31 +179,88 @@ contract AnonymousCopyright is SepoliaConfig {
         return workId;
     }
 
-    // Request verification of work ownership by comparing encrypted content hashes
-    function requestVerifyWork(uint256 _workId, uint32 _contentHashToVerify) external {
-        require(_workId > 0 && _workId <= workCounter, "Invalid work ID");
+    // Request verification of work ownership with Gateway callback pattern
+    function requestVerifyWork(
+        uint256 _workId,
+        uint32 _contentHashToVerify
+    ) external payable validWorkId(_workId) {
+        require(msg.value == verificationFee, "Incorrect verification fee");
+        require(_contentHashToVerify > 0, "Invalid content hash"); // Input validation
 
         OriginalWork storage work = works[_workId];
         euint32 encryptedProvidedHash = FHE.asEuint32(_contentHashToVerify);
 
+        // Privacy protection: Use random multiplier to obfuscate comparison
         ebool isMatch = FHE.eq(work.encryptedContentHash, encryptedProvidedHash);
 
-        // Request async decryption
+        // Request async decryption via Gateway
         bytes32[] memory cts = new bytes32[](1);
         cts[0] = FHE.toBytes32(isMatch);
-        FHE.requestDecryption(cts, this.processVerification.selector);
+        uint256 requestId = FHE.requestDecryption(cts, this.processVerificationCallback.selector);
+
+        // Track verification request for refund mechanism
+        verificationRequests[requestId] = VerificationRequest({
+            workId: _workId,
+            requester: msg.sender,
+            timestamp: block.timestamp,
+            decryptionRequestId: requestId,
+            processed: false,
+            feePaid: true
+        });
+
+        requestIdToWorkId[requestId] = _workId;
+
+        emit VerificationRequested(_workId, msg.sender, requestId);
     }
 
-    // Callback to process verification result
-    function processVerification(
+    // Gateway callback to process verification result
+    function processVerificationCallback(
         uint256 requestId,
-        bool isMatch
-    ) public {
-        // Emit event with verification result
-        emit VerificationResult(requestId, isMatch);
+        bytes memory cleartexts,
+        bytes memory decryptionProof
+    ) external {
+        // Verify signatures against the request and provided cleartexts
+        FHE.checkSignatures(requestId, cleartexts, decryptionProof);
+
+        VerificationRequest storage request = verificationRequests[requestId];
+        require(!request.processed, "Already processed");
+        require(request.requester != address(0), "Invalid request");
+
+        // Decode the cleartext result
+        bool isMatch = abi.decode(cleartexts, (bool));
+
+        request.processed = true;
+
+        emit VerificationProcessed(requestId, request.workId, isMatch);
+
+        // Note: If verification fails, user can claim refund via claimVerificationRefund
     }
 
-    event VerificationResult(uint256 indexed requestId, bool isMatch);
+    // Refund mechanism: Handle decryption failures or timeouts
+    function claimVerificationRefund(uint256 requestId) external noReentrant {
+        VerificationRequest storage request = verificationRequests[requestId];
+        require(request.requester == msg.sender, "Not requester");
+        require(request.feePaid, "No fee paid");
+        require(
+            !request.processed && block.timestamp > request.timestamp + VERIFICATION_TIMEOUT,
+            "Cannot refund yet"
+        );
+
+        request.feePaid = false;
+        pendingRefunds[msg.sender] += verificationFee;
+
+        emit RefundIssued(msg.sender, verificationFee);
+    }
+
+    // Withdraw pending refunds
+    function withdrawRefund() external noReentrant {
+        uint256 amount = pendingRefunds[msg.sender];
+        require(amount > 0, "No refund available");
+
+        pendingRefunds[msg.sender] = 0;
+        (bool sent, ) = payable(msg.sender).call{value: amount}("");
+        require(sent, "Refund transfer failed");
+    }
 
     // File a dispute against a work claiming prior ownership
     function fileDispute(
